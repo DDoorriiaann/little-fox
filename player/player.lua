@@ -1,10 +1,9 @@
 player = {}
 
 player.x = 100
-player.y = 100
+player.y = 200
 player.speed = 0.5
 player.direction = "right_idle"
-player.image = love.graphics.newImage(fox)
 player.spriteSheet = love.graphics.newImage("assets/sprites/fox/FoxSpriteSheet.png")
 player.grid = anim8.newGrid(96, 96, player.spriteSheet:getWidth(), player.spriteSheet:getHeight())
 player.animations = {}

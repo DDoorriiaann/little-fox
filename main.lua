@@ -6,7 +6,16 @@ function love.reset_idle_time()
 end
 
 function love.load()
+	--libraries
     anim8 = require("libraries/anim8")
+	gamera = require("libraries/gamera")
+
+	--modules
+	grid = require("drawing/grid")
+    input_management = require("input_management/input_management")
+    player = require("player/player")
+
+	--love settings
     height = 600
     width = 800 
     love.window.setMode(width, height, {resizable=false, vsync=false})
@@ -14,12 +23,18 @@ function love.load()
     love.window.height = height
     love.window.width = width
     love.graphics.setBackgroundColor(0.1, 0.1, 0.1)
-    fox = love.image.newImageData("assets/sprites/fox/idle/fox-idle-1.png")
+	love.graphics.setDefaultFilter( 'nearest', 'nearest' )
+
+	--load background
+	background = {}
+	background.middleground = love.graphics.newImage("assets/backgrounds/forest/middleground (z 0).png")
+	--load sounds
     bg_music = love.audio.newSource("assets/sounds/music/a-robust-crew.mp3", "stream")
-    grid = require("drawing/grid")
-    input_management = require("input_management/input_management")
-    player = require("player/player")
     bg_music:play()
+
+	--create camera
+	local cam = gamera.new(0,0,2000,2000)
+
 end
 
 function love.update(dt)
@@ -49,10 +64,9 @@ function love.update(dt)
     end
 end
 
-function love.draw()
-    --grid.draw()
-    --love.graphics.print(direction, 10, 10)
-    if (player.direction == "right") then
+local function drawCameraView(l,t,w,h)
+	love.graphics.draw(background.middleground, -100, 130, 0, 0.2, 0.2)
+	if (player.direction == "right") then
         player.animations.run:draw(player.spriteSheet, player.x, player.y)
     elseif (player.direction == "left") then
         player.animations.run:draw(player.spriteSheet, player.x, player.y, 0, -1, 1, 96, 0)
@@ -65,4 +79,10 @@ function love.draw()
     elseif (idle_time > time_before_sleep and player.direction == "left_idle") then
         player.animations.sleep:draw(player.spriteSheet, player.x, player.y, 0, -1, 1, 96, 0)
     end
+end
+
+function love.draw()
+    --grid.draw()
+    --love.graphics.print(direction, 10, 10)
+	drawCameraView(0,0,love.window.width,love.window.height)
 end
